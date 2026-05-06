@@ -1,3 +1,5 @@
+package main;
+
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)
  * Curso: Tecnologia em Análise e Desenvolvimento de Sistemas
@@ -7,9 +9,8 @@
  *
  * Projeto – Café Expresso
  *
- * Descrição:
- * Representa um produto do cardápio da cafeteria.
- * Contém nome e preço unitário.
+ * Responsabilidade:
+ * Representa um produto do cardápio.
  */
 public class Produto {
 
@@ -17,6 +18,13 @@ public class Produto {
     private double precoUnitario;
 
     public Produto(String nome, double precoUnitario) {
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException(MensagensErro.NOME_INVALIDO);
+        }
+        if (precoUnitario <= 0) {
+            throw new IllegalArgumentException(MensagensErro.PRECO_INVALIDO);
+        }
+
         this.nome = nome;
         this.precoUnitario = precoUnitario;
     }

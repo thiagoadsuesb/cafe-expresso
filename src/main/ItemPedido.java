@@ -1,3 +1,5 @@
+package main;
+
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)
  * Curso: Tecnologia em Análise e Desenvolvimento de Sistemas
@@ -7,9 +9,8 @@
  *
  * Projeto – Café Expresso
  *
- * Descrição:
+ * Responsabilidade:
  * Representa um item dentro de um pedido.
- * Faz a ligação entre Produto e quantidade.
  */
 public class ItemPedido {
 
@@ -17,6 +18,15 @@ public class ItemPedido {
     private int quantidade;
 
     public ItemPedido(Produto produto, int quantidade) {
+
+        if (produto == null) {
+            throw new IllegalArgumentException(MensagensErro.PRODUTO_NULO);
+        }
+
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException(MensagensErro.QUANTIDADE_INVALIDA);
+        }
+
         this.produto = produto;
         this.quantidade = quantidade;
     }

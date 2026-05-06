@@ -1,3 +1,5 @@
+package main;
+
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)
  * Curso: Tecnologia em Análise e Desenvolvimento de Sistemas
@@ -11,16 +13,8 @@
  * Define os estados possíveis de um pedido.
  */
 public enum StatusPedido {
-
-    // Pedido foi criado mas não pago
     PENDENTE,
-
-    // Cliente realizou pagamento
     PAGO,
-
-    // Pedido está sendo preparado
     EM_PREPARO,
-
-    // Pedido finalizado e entregue
     FINALIZADO
 }

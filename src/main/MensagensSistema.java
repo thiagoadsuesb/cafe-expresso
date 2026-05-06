@@ -1,3 +1,4 @@
+package main;
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)
  * Curso: Tecnologia em Análise e Desenvolvimento de Sistemas
