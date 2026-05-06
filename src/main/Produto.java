@@ -7,10 +7,10 @@ package main;
  * Professor: Lucas Santos de Oliveira
  * Autor: Thiago Ferreira Prates Neves
  *
- * Projeto – Café Expresso
+ * Projeto: Café Expresso
  *
- * Responsabilidade:
- * Representa um produto do cardápio.
+ * Descrição:
+ * Representa um produto do cardápio da cafeteria com nome e preço unitário.
  */
 public class Produto {
 
@@ -18,9 +18,11 @@ public class Produto {
     private double precoUnitario;
 
     public Produto(String nome, double precoUnitario) {
+
         if (nome == null || nome.isBlank()) {
             throw new IllegalArgumentException(MensagensErro.NOME_INVALIDO);
         }
+
         if (precoUnitario <= 0) {
             throw new IllegalArgumentException(MensagensErro.PRECO_INVALIDO);
         }

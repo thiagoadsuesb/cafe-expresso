@@ -7,10 +7,10 @@ package main;
  * Professor: Lucas Santos de Oliveira
  * Autor: Thiago Ferreira Prates Neves
  *
- * Projeto – Café Expresso
+ * Projeto: Café Expresso
  *
- * Responsabilidade:
- * Representa um item dentro de um pedido.
+ * Descrição:
+ * Representa a associação entre Produto e quantidade dentro de um pedido.
  */
 public class ItemPedido {
 

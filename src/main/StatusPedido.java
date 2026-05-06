@@ -7,10 +7,10 @@ package main;
  * Professor: Lucas Santos de Oliveira
  * Autor: Thiago Ferreira Prates Neves
  *
- * Projeto – Café Expresso
+ * Projeto: Café Expresso
  *
  * Descrição:
- * Define os estados possíveis de um pedido.
+ * Representa os estados possíveis de um pedido.
  */
 public enum StatusPedido {
     PENDENTE,
