@@ -1,4 +1,4 @@
-package main;
+package main.enumeracao;
 
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)
@@ -10,9 +10,11 @@ package main;
  * Projeto: Café Expresso
  *
  * Descrição:
- * Representa os estados possíveis de um pedido.
+ * Representa os estados possíveis
+ * de um pedido.
  */
 public enum StatusPedido {
+
     PENDENTE,
     PAGO,
     EM_PREPARO,
