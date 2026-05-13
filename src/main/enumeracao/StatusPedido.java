@@ -1,4 +1,4 @@
-package main.enumeracao;
+package enumeracao;
 
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)

@@ -18,13 +18,17 @@ package aplicacao;
  * =========================================================
  */
 
-import java.util.Scanner;
-
 import modelo.ItemPedido;
 import modelo.Pedido;
 import modelo.Produto;
 
 import enumeracao.StatusPedido;
+
+import utilitario.FormatadorMoeda;
+import utilitario.ValidadorTexto;
+
+import constante.MensagensErro;
+import constante.MensagensSistema;
 
 public class Main {
 

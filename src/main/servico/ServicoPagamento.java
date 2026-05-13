@@ -1,7 +1,7 @@
-package main.servico;
+package servico;
 
-import main.modelo.Pedido;
-import main.utilitario.FormatadorMoeda;
+import modelo.Pedido;
+import utilitario.FormatadorMoeda;
 
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)

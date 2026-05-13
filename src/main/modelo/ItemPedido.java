@@ -1,4 +1,4 @@
-package main.modelo;
+package modelo;
 
 import main.constante.MensagensErro;
 

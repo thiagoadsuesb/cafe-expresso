@@ -1,4 +1,4 @@
-package main.excecao;
+package excecao;
 
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)

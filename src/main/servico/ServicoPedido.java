@@ -1,8 +1,8 @@
-package main.servico;
+package servico;
 
-import main.modelo.ItemPedido;
-import main.modelo.Pedido;
-import main.excecao.ExcecaoPedidoVazio;
+import modelo.ItemPedido;
+import modelo.Pedido;
+import excecao.ExcecaoPedidoVazio;
 
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)

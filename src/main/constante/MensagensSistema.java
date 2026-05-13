@@ -1,4 +1,4 @@
-package main.constante;
+package constante;
 
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)

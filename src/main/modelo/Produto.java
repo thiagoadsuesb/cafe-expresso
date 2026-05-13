@@ -1,7 +1,7 @@
-package main.modelo;
+package modelo;
 
-import main.constante.MensagensErro;
-import main.utilitario.ValidadorTexto;
+import constante.MensagensErro;
+import utilitario.ValidadorTexto;
 
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)

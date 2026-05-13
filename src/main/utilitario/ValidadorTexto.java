@@ -1,4 +1,4 @@
-package main.utilitario;
+package utilitario;
 
 /**
  * Universidade Estadual do Sudoeste da Bahia (UESB)
