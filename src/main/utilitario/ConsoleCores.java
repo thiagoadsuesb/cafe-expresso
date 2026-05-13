@@ -2,7 +2,8 @@ package utilitario;
 
 /**
  * =========================================================
- * UESB - CORES DE TERMINAL (CUI)
+ * UESB - CAFÉ EXPRESSO SYSTEM
+ * UTILITÁRIO DE CORES ANSI
  * =========================================================
  */
 public class ConsoleCores {
@@ -15,6 +16,7 @@ public class ConsoleCores {
     public static final String AZUL = "\u001B[34m";
     public static final String ROXO = "\u001B[35m";
     public static final String CIANO = "\u001B[36m";
+    public static final String BRANCO = "\u001B[37m";
 
     public static String cor(String texto, String cor) {
         return cor + texto + RESET;

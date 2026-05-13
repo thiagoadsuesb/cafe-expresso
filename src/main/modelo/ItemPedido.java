@@ -1,7 +1,7 @@
 package modelo;
 
 import constante.MensagensErro;
-
+import java.util.Objects;
 /**
  * =========================================================
  * UNIVERSIDADE ESTADUAL DO SUDOESTE DA BAHIA (UESB)
@@ -14,69 +14,36 @@ import constante.MensagensErro;
  * PROJETO: CAFÉ EXPRESSO SYSTEM
  *
  * DESCRIÇÃO:
- * Classe responsável por representar
- * um item do pedido.
+ * Representa um item dentro de um pedido.
  * =========================================================
  */
+
+
 public class ItemPedido {
 
     private Produto produto;
-
     private int quantidade;
 
-    /**
-     * Construtor do item.
-     *
-     * @param produto Produto selecionado
-     * @param quantidade Quantidade
-     */
-    public ItemPedido(
-            Produto produto,
-            int quantidade
-    ) {
+    public ItemPedido(Produto produto, int quantidade) {
 
-        if (produto == null) {
+        if (Objects.isNull(produto))
+            throw new IllegalArgumentException("Produto nulo");
 
-            throw new IllegalArgumentException(
-                    MensagensErro.PRODUTO_NULO
-            );
-        }
-
-        if (quantidade <= 0) {
-
-            throw new IllegalArgumentException(
-                    MensagensErro.QUANTIDADE_INVALIDA
-            );
-        }
+        if (quantidade <= 0)
+            throw new IllegalArgumentException("Quantidade inválida");
 
         this.produto = produto;
         this.quantidade = quantidade;
     }
 
-    /**
-     * Calcula subtotal do item.
-     *
-     * @return subtotal
-     */
-    public double calcularSubtotal() {
-
+    public double getSubtotal() {
         return produto.getPreco() * quantidade;
     }
 
-    /**
-     * Retorna produto.
-     *
-     * @return produto
-     */
     public Produto getProduto() {
         return produto;
     }
 
-    /**
-     * Retorna quantidade.
-     *
-     * @return quantidade
-     */
     public int getQuantidade() {
         return quantidade;
     }

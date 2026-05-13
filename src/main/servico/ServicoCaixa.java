@@ -12,9 +12,8 @@ public class ServicoCaixa {
 
     public static void relatorio() {
 
-        System.out.println("\n===== CAIXA DO DIA =====");
-        System.out.println("Total arrecadado: R$ " + total);
+        System.out.println("\n===== CAIXA =====");
+        System.out.println("Total: " + total);
         System.out.println("Pedidos: " + pedidos);
-        System.out.println("========================");
     }
 }

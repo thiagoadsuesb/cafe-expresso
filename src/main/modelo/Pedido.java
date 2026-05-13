@@ -1,7 +1,6 @@
 package modelo;
 
 import enumeracao.StatusPedido;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,185 +33,41 @@ import java.util.List;
  * - Proteger encapsulamento da lista
  * =========================================================
  */
+
 public class Pedido {
 
-    /**
-     * Lista interna de itens do pedido.
-     */
-    private final List<ItemPedido> itens;
+    private List<ItemPedido> itens = new ArrayList<>();
+    private StatusPedido status = StatusPedido.PENDENTE;
 
-    /**
-     * Status atual do pedido.
-     */
-    private StatusPedido status;
-
-    /**
-     * =====================================================
-     * CONSTRUTOR
-     * =====================================================
-     *
-     * Inicializa o pedido com:
-     * - lista vazia
-     * - status pendente
-     */
-    public Pedido() {
-
-        this.itens = new ArrayList<>();
-
-        this.status = StatusPedido.PENDENTE;
-    }
-
-    /**
-     * =====================================================
-     * ADICIONAR ITEM
-     * =====================================================
-     *
-     * Adiciona um novo item ao pedido.
-     *
-     * REGRAS:
-     * - Item não pode ser nulo
-     * - Pedido deve estar pendente
-     *
-     * @param item Item do pedido
-     */
     public void adicionarItem(ItemPedido item) {
-
-        if (item == null) {
-
-            throw new IllegalArgumentException(
-                    "Item do pedido não pode ser nulo."
-            );
-        }
-
-        if (status != StatusPedido.PENDENTE) {
-
-            throw new IllegalStateException(
-                    "Não é permitido adicionar itens após processamento do pedido."
-            );
-        }
-
         itens.add(item);
     }
 
-    /**
-     * =====================================================
-     * CALCULAR TOTAL
-     * =====================================================
-     *
-     * Calcula o valor total do pedido
-     * somando todos os subtotais.
-     *
-     * @return Valor total do pedido
-     */
+    public List<ItemPedido> getItens() {
+        return itens;
+    }
+
     public double calcularTotal() {
-
-        double total = 0;
-
-        for (ItemPedido item : itens) {
-
-            total += item.calcularSubtotal();
-        }
-
-        return total;
+        return itens.stream()
+                .mapToDouble(ItemPedido::getSubtotal)
+                .sum();
     }
 
-    /**
-     * =====================================================
-     * AVANÇAR STATUS
-     * =====================================================
-     *
-     * Realiza a transição de status
-     * do pedido conforme fluxo:
-     *
-     * PENDENTE -> PAGO
-     * PAGO -> EM_PREPARO
-     * EM_PREPARO -> FINALIZADO
-     *
-     * Caso já esteja finalizado,
-     * lança exceção.
-     */
-    public void avancarStatus() {
-
-        switch (status) {
-
-            case PENDENTE:
-
-                status = StatusPedido.PAGO;
-
-                break;
-
-            case PAGO:
-
-                status = StatusPedido.EM_PREPARO;
-
-                break;
-
-            case EM_PREPARO:
-
-                status = StatusPedido.FINALIZADO;
-
-                break;
-
-            default:
-
-                throw new IllegalStateException(
-                        "Pedido já foi finalizado."
-                );
-        }
-    }
-
-    /**
-     * =====================================================
-     * RETORNAR STATUS
-     * =====================================================
-     *
-     * Retorna o status atual do pedido.
-     *
-     * @return Status atual
-     */
     public StatusPedido getStatus() {
-
         return status;
     }
 
-    /**
-     * =====================================================
-     * ALTERAR STATUS
-     * =====================================================
-     *
-     * Altera manualmente o status do pedido.
-     *
-     * REGRA:
-     * - Status não pode ser nulo
-     *
-     * @param status Novo status
-     */
     public void setStatus(StatusPedido status) {
-
-        if (status == null) {
-
-            throw new IllegalArgumentException(
-                    "Status não pode ser nulo."
-            );
-        }
-
         this.status = status;
     }
 
-    /**
-     * =====================================================
-     * RETORNAR ITENS
-     * =====================================================
-     *
-     * Retorna lista protegida de itens.
-     *
-     * A lista retornada é imutável
-     * para proteger encapsulamento.
-     *
-     * @return Lista imutável de itens
-     */
-    public List<ItemPedido> getItens() {
+    public void avancarStatus() {
 
-        return List.copyOf(itens);
+        switch (status) {
+            case PENDENTE -> status = StatusPedido.PAGO;
+            case PAGO -> status = StatusPedido.EM_PREPARO;
+            case EM_PREPARO -> status = StatusPedido.FINALIZADO;
+            case FINALIZADO -> System.out.println("Pedido já finalizado");
+        }
     }
 }

@@ -13,8 +13,8 @@ package enumeracao;
  * Representa os estados possíveis
  * de um pedido.
  */
-public enum StatusPedido {
 
+public enum StatusPedido {
     PENDENTE,
     PAGO,
     EM_PREPARO,

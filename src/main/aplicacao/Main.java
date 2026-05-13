@@ -1,12 +1,8 @@
 package aplicacao;
 
+import modelo.*;
 import enumeracao.StatusPedido;
-import modelo.ItemPedido;
-import modelo.Pedido;
-import modelo.Produto;
-import servico.PixService;
-import servico.ServicoCaixa;
-import servico.ServicoCozinha;
+import servico.*;
 import test.DetalheTeste;
 import utilitario.ConsoleCores;
 import utilitario.FormatadorMoeda;
@@ -18,30 +14,22 @@ import java.util.Scanner;
 /**
  * =========================================================
  * UNIVERSIDADE ESTADUAL DO SUDOESTE DA BAHIA (UESB)
- * CURSO: ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+ * CURSO: ADS
  * DISCIPLINA: ENGENHARIA DE SOFTWARE AVANÇADA
  * PROFESSOR: LUCAS SANTOS DE OLIVEIRA
- * ALUNO: THIAGO FERREIRA PRATES NEVES
  * =========================================================
  *
- * PROJETO: CAFÉ EXPRESSO SYSTEM
- *
- * DESCRIÇÃO:
- * Sistema de gerenciamento de cafeteria
- * com controle de pedidos, cozinha,
- * pagamento PIX e caixa diário.
+ * SISTEMA: CAFÉ EXPRESSO
+ * FLUXO: PEDIDO → CARDÁPIO → PIX → COZINHA → CAIXA
  * =========================================================
  */
 public class Main {
 
-    private static final Scanner scanner =
-            new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
 
-    private static Pedido pedido =
-            new Pedido();
+    private static Pedido pedido = new Pedido();
 
-    private static final List<Produto> cardapio =
-            new ArrayList<>();
+    private static final List<Produto> cardapio = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -50,299 +38,157 @@ public class Main {
         menu();
     }
 
-    /**
-     * ================= MENU =================
-     */
+    // ================= MENU =================
     private static void menu() {
 
-        int opcao;
+        int op;
 
         do {
+            System.out.println("\n====================================");
+            System.out.println(" CAFÉ EXPRESSO SYSTEM - UESB");
+            System.out.println("====================================");
 
-            limparTela();
-
-            cabecalho();
-
-            System.out.println(ConsoleCores.cor(
-                    "[1] NOVO PEDIDO",
-                    ConsoleCores.VERDE));
-
-            System.out.println("[2] CARDÁPIO");
-            System.out.println("[3] FINALIZAR PEDIDO");
-            System.out.println("[4] STATUS");
-            System.out.println("[5] COZINHA");
-            System.out.println("[6] PIX");
-            System.out.println("[7] CAIXA");
-            System.out.println("[8] SOBRE");
-            System.out.println("[9] TESTES");
+            System.out.println("[1] NOVO PEDIDO");
+            System.out.println("[2] CARDÁPIO (ADICIONAR ITEM)");
+            System.out.println("[3] PIX PAGAMENTO");
+            System.out.println("[4] COZINHA");
+            System.out.println("[5] CAIXA");
+            System.out.println("[6] STATUS");
+            System.out.println("[7] TESTES");
             System.out.println("[0] SAIR");
 
-            linha();
+            System.out.print("\nESCOLHA: ");
+            op = lerInt();
 
-            System.out.print("ESCOLHA: ");
-
-            opcao = lerInt();
-
-            switch (opcao) {
+            switch (op) {
 
                 case 1 -> novoPedido();
-
                 case 2 -> cardapio();
+                case 3 -> pix();
+                case 4 -> cozinha();
+                case 5 -> caixa();
+                case 6 -> status();
+                case 7 -> DetalheTeste.executarRelatorioTeste();
+                case 0 -> System.out.println("Encerrando sistema...");
 
-                case 3 -> finalizarPedido();
-
-                case 4 -> status();
-
-                case 5 -> cozinha();
-
-                case 6 -> pix();
-
-                case 7 -> caixa();
-
-                case 8 -> Sobre.exibir();
-
-                case 9 -> DetalheTeste.executarRelatorioTeste();
-
-                case 0 -> System.out.println(
-                        "Sistema encerrado.");
-
-                default -> System.out.println(
-                        "Opção inválida.");
+                default -> System.out.println("Opção inválida!");
             }
 
-            pausar();
-
-        } while (opcao != 0);
+        } while (op != 0);
     }
 
-    /**
-     * ================= PEDIDO =================
-     */
+    // ================= PEDIDO =================
     private static void novoPedido() {
 
         pedido = new Pedido();
-
         pedido.setStatus(StatusPedido.PENDENTE);
 
-        System.out.println(ConsoleCores.cor(
-                "Pedido criado com sucesso!",
-                ConsoleCores.VERDE));
+        System.out.println(ConsoleCores.cor("✔ Novo pedido criado!", ConsoleCores.VERDE));
     }
 
-    /**
-     * ================= CARDÁPIO =================
-     */
+    // ================= CARDÁPIO =================
     private static void cardapio() {
 
         System.out.println("\n===== CARDÁPIO =====");
 
         for (Produto p : cardapio) {
-
-            System.out.println(
-                    p.getId()
-                            + " - "
-                            + p.getNome()
-                            + " - "
-                            + FormatadorMoeda.formatar(
-                            p.getPreco()
-                    )
-            );
+            System.out.println(p.getId() + " - " + p.getNome());
         }
 
-        System.out.println(
-                "\nDigite 0 para sair.");
+        System.out.print("ID produto: ");
+        int id = lerInt();
 
-        int opcao;
+        System.out.print("Quantidade: ");
+        int qtd = lerInt();
 
-        do {
+        Produto escolhido = buscar(id);
 
-            System.out.print("Produto: ");
-
-            opcao = lerInt();
-
-            if (opcao == 0) {
-                break;
-            }
-
-            Produto produto =
-                    buscarProduto(opcao);
-
-            if (produto != null) {
-
-                pedido.adicionarItem(
-                        new ItemPedido(produto, 1)
-                );
-
-                System.out.println(
-                        "Item adicionado!");
-            }
-
-        } while (true);
-    }
-
-    /**
-     * ================= BUSCAR PRODUTO =================
-     */
-    private static Produto buscarProduto(int id) {
-
-        for (Produto p : cardapio) {
-
-            if (p.getId() == id) {
-                return p;
-            }
+        if (escolhido == null) {
+            System.out.println("Produto inválido!");
+            return;
         }
 
-        return null;
+        pedido.adicionarItem(new ItemPedido(escolhido, qtd));
+
+        System.out.println(ConsoleCores.cor("✔ Item adicionado!", ConsoleCores.AZUL));
     }
 
-    /**
-     * ================= FINALIZAR =================
-     */
-    private static void finalizarPedido() {
-
-        pedido.setStatus(
-                StatusPedido.FINALIZADO);
-
-        System.out.println(
-                "\nPedido finalizado!");
-    }
-
-    /**
-     * ================= STATUS =================
-     */
-    private static void status() {
-
-        System.out.println(
-                "\nSTATUS: "
-                        + pedido.getStatus());
-
-        System.out.println(
-                "TOTAL: "
-                        + FormatadorMoeda.formatar(
-                        pedido.calcularTotal()
-                ));
-    }
-
-    /**
-     * ================= COZINHA =================
-     */
-    private static void cozinha() {
-
-        ServicoCozinha cozinha =
-                new ServicoCozinha();
-
-        cozinha.preparar(pedido);
-    }
-
-    /**
-     * ================= PIX =================
-     */
+    // ================= PIX =================
     private static void pix() {
 
         if (pedido.getItens().isEmpty()) {
-
-            System.out.println(ConsoleCores.cor(
-                    "Pedido vazio!",
-                    ConsoleCores.VERMELHO));
-
+            System.out.println(ConsoleCores.cor("❌ Pedido vazio!", ConsoleCores.VERMELHO));
             return;
         }
+
+        System.out.println("\n===== PIX =====");
 
         PixService.gerarPix(pedido);
 
         pedido.setStatus(StatusPedido.PAGO);
+
+        ServicoCaixa.registrar(pedido.calcularTotal());
+
+        System.out.println(ConsoleCores.cor("✔ Pagamento confirmado!", ConsoleCores.VERDE));
     }
 
-    /**
-     * ================= CAIXA =================
-     */
-    private static void caixa() {
+    // ================= COZINHA =================
+    private static void cozinha() {
 
-        ServicoCaixa.registrar(
-                pedido.calcularTotal());
+        if (pedido.getStatus() != StatusPedido.PAGO) {
+            System.out.println(ConsoleCores.cor("❌ Precisa pagar antes!", ConsoleCores.VERMELHO));
+            return;
+        }
+
+        ServicoCozinha cozinha = new ServicoCozinha();
+
+        cozinha.preparar(pedido);
+    }
+
+    // ================= CAIXA =================
+    private static void caixa() {
 
         ServicoCaixa.relatorio();
     }
 
-    /**
-     * ================= CARDÁPIO FIXO =================
-     */
+    // ================= STATUS =================
+    private static void status() {
+
+        System.out.println("\nSTATUS: " + pedido.getStatus());
+
+        System.out.println("TOTAL: " +
+                FormatadorMoeda.formatar(pedido.calcularTotal()));
+    }
+
+    // ================= BUSCA PRODUTO =================
+    private static Produto buscar(int id) {
+
+        for (Produto p : cardapio) {
+            if (p.getId() == id) return p;
+        }
+        return null;
+    }
+
+    // ================= CARDÁPIO FIXO =================
     private static void carregarCardapio() {
 
-        cardapio.add(
-                new Produto(
-                        1,
-                        "Cafe Expresso",
-                        5.50
-                )
-        );
-
-        cardapio.add(
-                new Produto(
-                        2,
-                        "Cappuccino",
-                        8.00
-                )
-        );
-
-        cardapio.add(
-                new Produto(
-                        3,
-                        "Pao de Queijo",
-                        4.00
-                )
-        );
-
-        cardapio.add(
-                new Produto(
-                        4,
-                        "Quiche de Frango",
-                        12.00
-                )
-        );
+        cardapio.add(new Produto(1, "Cafe Expresso", 5.50));
+        cardapio.add(new Produto(2, "Cappuccino", 8.00));
+        cardapio.add(new Produto(3, "Pao de Queijo", 4.00));
+        cardapio.add(new Produto(4, "Quiche de Frango", 12.00));
     }
 
-    /**
-     * ================= UI =================
-     */
-    private static void cabecalho() {
-
-        System.out.println("""
-                ====================================
-                   CAFÉ EXPRESSO SYSTEM - UESB
-                Engenharia de Software Avançada
-                ====================================
-                """);
-    }
-
-    private static void linha() {
-
-        System.out.println(
-                "====================================");
-    }
-
-    private static void limparTela() {
-
-        for (int i = 0; i < 10; i++) {
-
-            System.out.println();
-        }
-    }
-
-    private static void pausar() {
-
-        System.out.println(
-                "\nENTER PARA CONTINUAR...");
-
-        scanner.nextLine();
-    }
-
+    // ================= SCANNER (CORRIGIDO - ISSO RESOLVE TRAVAMENTO) =================
     private static int lerInt() {
 
-        int valor = scanner.nextInt();
+        while (!sc.hasNextInt()) {
+            sc.nextLine();
+            System.out.println("Digite um número válido!");
+        }
 
-        scanner.nextLine();
+        int v = sc.nextInt();
+        sc.nextLine(); // limpa buffer
 
-        return valor;
+        return v;
     }
 }
