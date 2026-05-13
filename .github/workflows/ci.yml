@@ -1,0 +1,38 @@
+name: Java Unit Test CI
+
+on:
+  push:
+    branches: [ "main", "versao-melhorada" ]
+
+  pull_request:
+    branches: [ "main", "versao-melhorada" ]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  JAVA_VERSION: '17'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código fonte
+        uses: actions/checkout@v5
+
+      - name: Configurar o ambiente Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: Mostrar versão Java
+        run: java -version
+
+      - name: Compilar projeto
+        run: |
+          mkdir -p out
+          javac -d out $(find src/main -name "*.java")
+
+      - name: Executar aplicação
+        run: |
+          java -cp out aplicacao.Main
