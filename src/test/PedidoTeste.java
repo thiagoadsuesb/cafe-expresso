@@ -1,5 +1,6 @@
 package test;
 
+<<<<<<< HEAD
 import enumeracao.StatusPedido;
 import modelo.ItemPedido;
 import modelo.Pedido;
@@ -11,10 +12,15 @@ import servico.ServicoPagamento;
 import utilitario.ConsoleCores;
 import utilitario.FormatadorMoeda;
 import utilitario.ValidadorTexto;
+=======
+import main.*;
+import org.junit.jupiter.api.Test;
+>>>>>>> 7bfb9e5940ae7a1f4d37d0608fe6a55abeeb8e30
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+<<<<<<< HEAD
  * =========================================================
  * UNIVERSIDADE ESTADUAL DO SUDOESTE DA BAHIA (UESB)
  * CURSO: ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
@@ -73,11 +79,34 @@ public class PedidoTeste {
 
         Pedido pedido = new Pedido();
         pedido.adicionarItem(new ItemPedido(new Produto(1, "Cafe", 5.0), 1));
+=======
+ * Universidade Estadual do Sudoeste da Bahia (UESB)
+ * Curso: Tecnologia em Análise e Desenvolvimento de Sistemas
+ * Disciplina: Engenharia de Software Avançada
+ * Professor: Lucas Santos de Oliveira
+ * Autor: Thiago Ferreira Prates Neves
+ *
+ * Projeto: Café Expresso
+ *
+ * Descrição:
+ * Testes unitários do sistema utilizando JUnit.
+ */
+public class PedidoTeste {
+
+    @Test
+    void deveAdicionarItemAoPedido() {
+        Produto cafe = new Produto("Café", 5.0);
+        ItemPedido item = new ItemPedido(cafe, 2);
+
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(item);
+>>>>>>> 7bfb9e5940ae7a1f4d37d0608fe6a55abeeb8e30
 
         assertEquals(1, pedido.getItens().size());
     }
 
     @Test
+<<<<<<< HEAD
     @DisplayName("Deve calcular total corretamente")
     void deveCalcularTotalCorretamente() {
 
@@ -103,6 +132,31 @@ public class PedidoTeste {
     void deveAvancarStatus() {
 
         Pedido pedido = new Pedido();
+=======
+    void deveCalcularTotalCorretamente() {
+        Produto cafe = new Produto("Café", 5.0);
+        Produto pao = new Produto("Pão", 3.0);
+
+        Pedido pedido = new Pedido();
+
+        pedido.adicionarItem(new ItemPedido(cafe, 2));
+        pedido.adicionarItem(new ItemPedido(pao, 3));
+
+        assertEquals(19.0, pedido.calcularTotal(), 0.01);
+    }
+
+    @Test
+    void naoDevePermitirProdutoNulo() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new ItemPedido(null, 1));
+    }
+
+    @Test
+    void deveAvancarStatusCorretamente() {
+        Pedido pedido = new Pedido();
+
+        assertEquals(StatusPedido.PENDENTE, pedido.getStatus());
+>>>>>>> 7bfb9e5940ae7a1f4d37d0608fe6a55abeeb8e30
 
         pedido.avancarStatus();
         assertEquals(StatusPedido.PAGO, pedido.getStatus());
@@ -113,6 +167,7 @@ public class PedidoTeste {
         pedido.avancarStatus();
         assertEquals(StatusPedido.FINALIZADO, pedido.getStatus());
     }
+<<<<<<< HEAD
 
     @Test
     @DisplayName("Não deve avançar após finalizado")
@@ -218,3 +273,6 @@ public class PedidoTeste {
         assertTrue(retorno.contains("Pagamento"));
     }
 }
+=======
+}
+>>>>>>> 7bfb9e5940ae7a1f4d37d0608fe6a55abeeb8e30
