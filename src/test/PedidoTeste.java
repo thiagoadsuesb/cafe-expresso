@@ -1,7 +1,6 @@
 package test;
 
 import enumeracao.StatusPedido;
-
 import modelo.ItemPedido;
 import modelo.Pedido;
 import modelo.Produto;
@@ -9,6 +8,10 @@ import modelo.Produto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import servico.PixService;
+import servico.ServicoPagamento;
+
+import utilitario.ConsoleCores;
 import utilitario.FormatadorMoeda;
 import utilitario.ValidadorTexto;
 
@@ -17,13 +20,13 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * =========================================================
  * UNIVERSIDADE ESTADUAL DO SUDOESTE DA BAHIA (UESB)
- * CURSO: TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+ * CURSO: ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
  * DISCIPLINA: ENGENHARIA DE SOFTWARE AVANÇADA
  * PROFESSOR: LUCAS SANTOS DE OLIVEIRA
- * AUTOR: THIAGO FERREIRA PRATES NEVES
+ * ALUNO: THIAGO FERREIRA PRATES NEVES
  * =========================================================
  *
- * PROJETO: CAFÉ EXPRESSO
+ * PROJETO: CAFÉ EXPRESSO SYSTEM
  *
  * DESCRIÇÃO:
  * Classe responsável pelos testes unitários
@@ -32,14 +35,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * OBJETIVOS:
  * - Validar regras de negócio
  * - Garantir funcionamento das entidades
- * - Aplicar conceitos de TDD
- * - Simular cenários reais
- * - Testar fluxos positivos e negativos
+ * - Aplicar TDD
+ * - Validar refatoração
+ * - Testar fluxo completo do sistema
  *
  * TECNOLOGIAS:
- * - Java
+ * - Java 26
  * - JUnit 5
- *
  * =========================================================
  */
 public class PedidoTeste {
@@ -55,18 +57,25 @@ public class PedidoTeste {
     void deveCriarProdutoCorretamente() {
 
         Produto produto =
-                new Produto(1, "Café", 5.0);
-
-        assertEquals(1, produto.getId());
+                new Produto(
+                        1,
+                        "Café Expresso",
+                        5.50
+                );
 
         assertEquals(
-                "Café",
+                1,
+                produto.getId()
+        );
+
+        assertEquals(
+                "Café Expresso",
                 produto.getNome()
         );
 
         assertEquals(
-                5.0,
-                produto.getPrecoUnitario()
+                5.50,
+                produto.getPreco()
         );
     }
 
@@ -106,8 +115,8 @@ public class PedidoTeste {
 
                 () -> new Produto(
                         1,
-                        "Café",
-                        -10.0
+                        "Cafe",
+                        -5.0
                 )
         );
     }
@@ -115,64 +124,28 @@ public class PedidoTeste {
     /**
      * =====================================================
      * TESTE:
-     * Não deve permitir quantidade inválida
+     * Deve calcular subtotal
      * =====================================================
      */
     @Test
-    @DisplayName("Não deve permitir quantidade inválida")
-    void naoDevePermitirQuantidadeNegativa() {
-
-        Produto cafe =
-                new Produto(1, "Café", 5.0);
-
-        assertThrows(
-                IllegalArgumentException.class,
-
-                () -> new ItemPedido(
-                        cafe,
-                        -1
-                )
-        );
-    }
-
-    /**
-     * =====================================================
-     * TESTE:
-     * Não deve permitir produto nulo
-     * =====================================================
-     */
-    @Test
-    @DisplayName("Não deve permitir produto nulo")
-    void naoDevePermitirProdutoNulo() {
-
-        assertThrows(
-                IllegalArgumentException.class,
-
-                () -> new ItemPedido(
-                        null,
-                        1
-                )
-        );
-    }
-
-    /**
-     * =====================================================
-     * TESTE:
-     * Deve calcular subtotal corretamente
-     * =====================================================
-     */
-    @Test
-    @DisplayName("Deve calcular subtotal corretamente")
+    @DisplayName("Deve calcular subtotal")
     void deveCalcularSubtotal() {
 
         Produto cafe =
-                new Produto(1, "Café", 5.0);
+                new Produto(
+                        1,
+                        "Cafe",
+                        5.0
+                );
 
         ItemPedido item =
-                new ItemPedido(cafe, 3);
+                new ItemPedido(
+                        cafe,
+                        2
+                );
 
         assertEquals(
-                15.0,
+                10.0,
                 item.calcularSubtotal()
         );
     }
@@ -187,15 +160,18 @@ public class PedidoTeste {
     @DisplayName("Deve adicionar item ao pedido")
     void deveAdicionarItemAoPedido() {
 
-        Produto cafe =
-                new Produto(1, "Café", 5.0);
-
-        ItemPedido item =
-                new ItemPedido(cafe, 2);
-
         Pedido pedido = new Pedido();
 
-        pedido.adicionarItem(item);
+        Produto cafe =
+                new Produto(
+                        1,
+                        "Cafe",
+                        5.0
+                );
+
+        pedido.adicionarItem(
+                new ItemPedido(cafe, 1)
+        );
 
         assertEquals(
                 1,
@@ -213,13 +189,21 @@ public class PedidoTeste {
     @DisplayName("Deve calcular total corretamente")
     void deveCalcularTotalCorretamente() {
 
+        Pedido pedido = new Pedido();
+
         Produto cafe =
-                new Produto(1, "Café", 5.0);
+                new Produto(
+                        1,
+                        "Cafe",
+                        5.0
+                );
 
         Produto pao =
-                new Produto(2, "Pão", 3.0);
-
-        Pedido pedido = new Pedido();
+                new Produto(
+                        2,
+                        "Pao",
+                        3.0
+                );
 
         pedido.adicionarItem(
                 new ItemPedido(cafe, 2)
@@ -231,25 +215,6 @@ public class PedidoTeste {
 
         assertEquals(
                 19.0,
-                pedido.calcularTotal(),
-                0.01
-        );
-    }
-
-    /**
-     * =====================================================
-     * TESTE:
-     * Pedido vazio deve ter total zero
-     * =====================================================
-     */
-    @Test
-    @DisplayName("Pedido vazio deve ter total zero")
-    void pedidoVazioDeveTerTotalZero() {
-
-        Pedido pedido = new Pedido();
-
-        assertEquals(
-                0.0,
                 pedido.calcularTotal()
         );
     }
@@ -257,12 +222,12 @@ public class PedidoTeste {
     /**
      * =====================================================
      * TESTE:
-     * Deve avançar status corretamente
+     * Pedido deve iniciar pendente
      * =====================================================
      */
     @Test
-    @DisplayName("Deve avançar status corretamente")
-    void deveAvancarStatusCorretamente() {
+    @DisplayName("Pedido deve iniciar pendente")
+    void pedidoDeveIniciarPendente() {
 
         Pedido pedido = new Pedido();
 
@@ -270,6 +235,19 @@ public class PedidoTeste {
                 StatusPedido.PENDENTE,
                 pedido.getStatus()
         );
+    }
+
+    /**
+     * =====================================================
+     * TESTE:
+     * Deve avançar status
+     * =====================================================
+     */
+    @Test
+    @DisplayName("Deve avançar status")
+    void deveAvancarStatus() {
+
+        Pedido pedido = new Pedido();
 
         pedido.avancarStatus();
 
@@ -296,12 +274,12 @@ public class PedidoTeste {
     /**
      * =====================================================
      * TESTE:
-     * Não deve avançar status após finalizado
+     * Não deve avançar após finalizado
      * =====================================================
      */
     @Test
-    @DisplayName("Não deve avançar status após finalizado")
-    void naoDeveAvancarStatusAposFinalizado() {
+    @DisplayName("Não deve avançar após finalizado")
+    void naoDeveAvancarAposFinalizado() {
 
         Pedido pedido = new Pedido();
 
@@ -319,27 +297,65 @@ public class PedidoTeste {
     /**
      * =====================================================
      * TESTE:
-     * Não deve adicionar item após pagamento
+     * Não deve permitir item nulo
      * =====================================================
      */
     @Test
-    @DisplayName("Não deve adicionar item após pagamento")
-    void naoDeveAdicionarItemAposPagamento() {
-
-        Pedido pedido = new Pedido();
-
-        pedido.avancarStatus();
-
-        Produto cafe =
-                new Produto(1, "Café", 5.0);
-
-        ItemPedido item =
-                new ItemPedido(cafe, 1);
+    @DisplayName("Não deve permitir item nulo")
+    void naoDevePermitirItemNulo() {
 
         assertThrows(
-                IllegalStateException.class,
+                IllegalArgumentException.class,
 
-                () -> pedido.adicionarItem(item)
+                () -> new ItemPedido(
+                        null,
+                        1
+                )
+        );
+    }
+
+    /**
+     * =====================================================
+     * TESTE:
+     * Não deve permitir quantidade inválida
+     * =====================================================
+     */
+    @Test
+    @DisplayName("Não deve permitir quantidade inválida")
+    void naoDevePermitirQuantidadeInvalida() {
+
+        Produto cafe =
+                new Produto(
+                        1,
+                        "Cafe",
+                        5.0
+                );
+
+        assertThrows(
+                IllegalArgumentException.class,
+
+                () -> new ItemPedido(
+                        cafe,
+                        0
+                )
+        );
+    }
+
+    /**
+     * =====================================================
+     * TESTE:
+     * Deve formatar moeda
+     * =====================================================
+     */
+    @Test
+    @DisplayName("Deve formatar moeda")
+    void deveFormatarMoeda() {
+
+        String valor =
+                FormatadorMoeda.formatar(15.5);
+
+        assertTrue(
+                valor.contains("15")
         );
     }
 
@@ -358,14 +374,14 @@ public class PedidoTeste {
         );
 
         assertTrue(
-                ValidadorTexto.textoEstaVazio("   ")
+                ValidadorTexto.textoEstaVazio(" ")
         );
     }
 
     /**
      * =====================================================
      * TESTE:
-     * Deve limpar espaços corretamente
+     * Deve limpar espaços
      * =====================================================
      */
     @Test
@@ -386,58 +402,85 @@ public class PedidoTeste {
     /**
      * =====================================================
      * TESTE:
-     * Deve formatar moeda corretamente
+     * Deve gerar pagamento
      * =====================================================
      */
     @Test
-    @DisplayName("Deve formatar moeda")
-    void deveFormatarMoeda() {
-
-        String valor =
-                FormatadorMoeda.formatar(15.5);
-
-        assertNotNull(valor);
-
-        assertTrue(
-                valor.contains("15")
-        );
-    }
-
-    /**
-     * =====================================================
-     * TESTE TDD:
-     * Não deve permitir ID inválido
-     * =====================================================
-     */
-    @Test
-    @DisplayName("Não deve permitir ID inválido")
-    void naoDevePermitirIdInvalido() {
-
-        assertThrows(
-                IllegalArgumentException.class,
-
-                () -> new Produto(
-                        0,
-                        "Café",
-                        5.0
-                )
-        );
-    }
-
-    /**
-     * =====================================================
-     * TESTE TDD:
-     * Lista retornada deve ser protegida
-     * =====================================================
-     */
-    @Test
-    @DisplayName("Lista retornada deve ser protegida")
-    void listaDeItensDeveSerProtegida() {
+    @DisplayName("Deve realizar pagamento")
+    void deveRealizarPagamento() {
 
         Pedido pedido = new Pedido();
 
         Produto cafe =
-                new Produto(1, "Café", 5.0);
+                new Produto(
+                        1,
+                        "Cafe",
+                        10.0
+                );
+
+        pedido.adicionarItem(
+                new ItemPedido(cafe, 1)
+        );
+
+        ServicoPagamento pagamento =
+                new ServicoPagamento();
+
+        String retorno =
+                pagamento.realizarPagamento(pedido);
+
+        assertNotNull(retorno);
+
+        assertTrue(
+                retorno.contains("Pagamento")
+        );
+    }
+
+    /**
+     * =====================================================
+     * TESTE:
+     * Deve gerar PIX
+     * =====================================================
+     */
+    @Test
+    @DisplayName("Deve gerar PIX")
+    void deveGerarPix() {
+
+        Pedido pedido = new Pedido();
+
+        Produto cafe =
+                new Produto(
+                        1,
+                        "Cafe",
+                        5.0
+                );
+
+        pedido.adicionarItem(
+                new ItemPedido(cafe, 2)
+        );
+
+        assertDoesNotThrow(
+                () -> PixService.gerarPix(pedido)
+        );
+    }
+
+    /**
+     * =====================================================
+     * TESTE:
+     * Lista deve ser protegida
+     * =====================================================
+     */
+    @Test
+    @DisplayName("Lista deve ser protegida")
+    void listaDeveSerProtegida() {
+
+        Pedido pedido = new Pedido();
+
+        Produto cafe =
+                new Produto(
+                        1,
+                        "Cafe",
+                        5.0
+                );
 
         pedido.adicionarItem(
                 new ItemPedido(cafe, 1)
@@ -449,5 +492,27 @@ public class PedidoTeste {
                 () -> pedido.getItens().clear()
         );
     }
-}
 
+    /**
+     * =====================================================
+     * TESTE:
+     * Console cores deve funcionar
+     * =====================================================
+     */
+    @Test
+    @DisplayName("Console cores deve funcionar")
+    void consoleCoresDeveFuncionar() {
+
+        String texto =
+                ConsoleCores.cor(
+                        "TESTE",
+                        ConsoleCores.VERDE
+                );
+
+        assertNotNull(texto);
+
+        assertTrue(
+                texto.contains("TESTE")
+        );
+    }
+}

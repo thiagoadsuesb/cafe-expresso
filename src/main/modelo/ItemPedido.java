@@ -5,13 +5,13 @@ import constante.MensagensErro;
 /**
  * =========================================================
  * UNIVERSIDADE ESTADUAL DO SUDOESTE DA BAHIA (UESB)
- * CURSO: TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+ * CURSO: ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
  * DISCIPLINA: ENGENHARIA DE SOFTWARE AVANÇADA
  * PROFESSOR: LUCAS SANTOS DE OLIVEIRA
- * AUTOR: THIAGO FERREIRA PRATES NEVES
+ * ALUNO: THIAGO FERREIRA PRATES NEVES
  * =========================================================
  *
- * PROJETO: CAFÉ EXPRESSO
+ * PROJETO: CAFÉ EXPRESSO SYSTEM
  *
  * DESCRIÇÃO:
  * Classe responsável por representar
@@ -20,23 +20,15 @@ import constante.MensagensErro;
  */
 public class ItemPedido {
 
-    /**
-     * Produto do item.
-     */
     private Produto produto;
 
-    /**
-     * Quantidade solicitada.
-     */
     private int quantidade;
 
     /**
-     * =====================================================
-     * CONSTRUTOR
-     * =====================================================
+     * Construtor do item.
      *
      * @param produto Produto selecionado
-     * @param quantidade Quantidade escolhida
+     * @param quantidade Quantidade
      */
     public ItemPedido(
             Produto produto,
@@ -62,35 +54,28 @@ public class ItemPedido {
     }
 
     /**
-     * =====================================================
-     * CALCULA SUBTOTAL
-     * =====================================================
+     * Calcula subtotal do item.
      *
-     * @return Valor subtotal
+     * @return subtotal
      */
     public double calcularSubtotal() {
 
-        return produto.getPrecoUnitario()
-                * quantidade;
+        return produto.getPreco() * quantidade;
     }
 
     /**
-     * =====================================================
-     * RETORNA PRODUTO
-     * =====================================================
+     * Retorna produto.
      *
-     * @return Produto
+     * @return produto
      */
     public Produto getProduto() {
         return produto;
     }
 
     /**
-     * =====================================================
-     * RETORNA QUANTIDADE
-     * =====================================================
+     * Retorna quantidade.
      *
-     * @return Quantidade
+     * @return quantidade
      */
     public int getQuantidade() {
         return quantidade;
